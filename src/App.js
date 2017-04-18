@@ -4,17 +4,12 @@
  * @flow
  */
 
-import React, {Component} from 'react';
-import {
-    AppRegistry,
-    Text,
-    Navigator,
-    StyleSheet,
-    TouchableOpacity,
-    BackAndroid
-} from 'react-native';
+import React, {Component} from "react";
+import {AppRegistry, BackAndroid, Navigator, StyleSheet, Text, TouchableOpacity} from "react-native";
 import Chats from "./Chats";
 import ContactsPresenter from "./ContactsPresenter";
+import Register from "./Register";
+import {PRIMARY_COLOR, PRIMARY_TEXT_COLOR} from "./styles/common";
 
 export default class App extends Component {
 
@@ -44,7 +39,7 @@ export default class App extends Component {
         return (
             <Navigator
                 ref={(nav) => { this.navigator = nav;}}
-                initialRoute={{id: 'chats', title: "Chats"}}
+                initialRoute={{id: 'register', title: "Register"}}
                 renderScene={this.navigatorRenderScene}
                 sceneStyle={{marginTop: Navigator.NavigationBar.Styles.General.TotalNavHeight}}
                 configureScene={() => {return Navigator.SceneConfigs.PushFromRight}}
@@ -64,19 +59,23 @@ export default class App extends Component {
                 return <Chats/>;
             case 'contacts':
                 return <ContactsPresenter/>;
+            case 'register':
+                return <Register/>
         }
     }
 }
 
 let NavigationBarRouteMapper = {
     LeftButton: (route, navigator, index, navState) => {
-        if (index === 0) return null;
-        return (
-            <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() => navigator.pop()}>
-                <Text style={[styles.navTextStyle, styles.leftButtonStyle]}>Back</Text>
-            </TouchableOpacity>);
+        if (route.id === 'contacts') {
+            return (
+                <TouchableOpacity
+                    style={styles.buttonStyle}
+                    onPress={() => navigator.pop()}>
+                    <Text style={[styles.navTextStyle, styles.leftButtonStyle]}>Back</Text>
+                </TouchableOpacity>);
+        }
+        return null;
     },
     RightButton: (route, navigator, index, navState) => {
         if (route.id === 'chats') {
@@ -87,23 +86,22 @@ let NavigationBarRouteMapper = {
                     <Text
                         style={[styles.navTextStyle, styles.rightButtonStyle]}>+</Text>
                 </TouchableOpacity>);
-        } else {
-            return null;
         }
+        return null;
     },
     Title: (route, navigator, index, navState) => {
         return (<Text style={[styles.navTextStyle, styles.titleStyle]}>{route.title}</Text>);
     },
 };
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
     navigationBarStyle: {
         flex: 1,
-        backgroundColor: '#66bb6a'
+        backgroundColor: PRIMARY_COLOR
     },
 
     navTextStyle: {
-        color: '#000000',
+        color: PRIMARY_TEXT_COLOR,
         textAlignVertical: 'center',
         fontSize: 16
     },
